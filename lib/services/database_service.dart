@@ -23,7 +23,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -44,7 +44,19 @@ class DatabaseService {
         engineOilType TEXT,
         engineOilCapacity REAL,
         coolantType TEXT,
-        coolantVolume REAL
+        coolantVolume REAL,
+        transmissionType TEXT,
+        transmissionLiquidType TEXT,
+        transmissionLiquidVolume REAL,
+        transferCaseType TEXT,
+        transferCaseOilType TEXT,
+        transferCaseOilCapacity REAL,
+        frontAxleType TEXT,
+        frontAxleOilType TEXT,
+        frontAxleOilCapacity REAL,
+        rearAxleType TEXT,
+        rearAxleOilType TEXT,
+        rearAxleOilCapacity REAL
       )
     ''');
 
@@ -86,6 +98,7 @@ class DatabaseService {
         type TEXT NOT NULL,
         cost REAL NOT NULL,
         mileage INTEGER,
+        motorHours INTEGER,
         serviceProvider TEXT,
         serviceDate TEXT NOT NULL,
         description TEXT,
@@ -112,6 +125,25 @@ class DatabaseService {
       await db.execute('ALTER TABLE automobiles ADD COLUMN engineOilCapacity REAL');
       await db.execute('ALTER TABLE automobiles ADD COLUMN coolantType TEXT');
       await db.execute('ALTER TABLE automobiles ADD COLUMN coolantVolume REAL');
+    }
+
+    if (oldVersion < 3) {
+      // Add drivetrain specification columns to automobiles table
+      await db.execute('ALTER TABLE automobiles ADD COLUMN transmissionType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN transmissionLiquidType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN transmissionLiquidVolume REAL');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN transferCaseType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN transferCaseOilType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN transferCaseOilCapacity REAL');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN frontAxleType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN frontAxleOilType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN frontAxleOilCapacity REAL');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN rearAxleType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN rearAxleOilType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN rearAxleOilCapacity REAL');
+
+      // Add motor hours column to service_records table
+      await db.execute('ALTER TABLE service_records ADD COLUMN motorHours INTEGER');
     }
   }
 

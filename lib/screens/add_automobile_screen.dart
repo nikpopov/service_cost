@@ -29,6 +29,20 @@ class _AddAutomobileScreenState extends State<AddAutomobileScreen> {
   final _coolantTypeController = TextEditingController();
   final _coolantVolumeController = TextEditingController();
 
+  // Drivetrain specifications controllers
+  final _transmissionTypeController = TextEditingController();
+  final _transmissionLiquidTypeController = TextEditingController();
+  final _transmissionLiquidVolumeController = TextEditingController();
+  final _transferCaseTypeController = TextEditingController();
+  final _transferCaseOilTypeController = TextEditingController();
+  final _transferCaseOilCapacityController = TextEditingController();
+  final _frontAxleTypeController = TextEditingController();
+  final _frontAxleOilTypeController = TextEditingController();
+  final _frontAxleOilCapacityController = TextEditingController();
+  final _rearAxleTypeController = TextEditingController();
+  final _rearAxleOilTypeController = TextEditingController();
+  final _rearAxleOilCapacityController = TextEditingController();
+
   bool _isLoading = false;
 
   @override
@@ -47,6 +61,22 @@ class _AddAutomobileScreenState extends State<AddAutomobileScreen> {
       _coolantTypeController.text = widget.automobile!.coolantType ?? '';
       _coolantVolumeController.text =
           widget.automobile!.coolantVolume?.toString() ?? '';
+      _transmissionTypeController.text = widget.automobile!.transmissionType ?? '';
+      _transmissionLiquidTypeController.text = widget.automobile!.transmissionLiquidType ?? '';
+      _transmissionLiquidVolumeController.text =
+          widget.automobile!.transmissionLiquidVolume?.toString() ?? '';
+      _transferCaseTypeController.text = widget.automobile!.transferCaseType ?? '';
+      _transferCaseOilTypeController.text = widget.automobile!.transferCaseOilType ?? '';
+      _transferCaseOilCapacityController.text =
+          widget.automobile!.transferCaseOilCapacity?.toString() ?? '';
+      _frontAxleTypeController.text = widget.automobile!.frontAxleType ?? '';
+      _frontAxleOilTypeController.text = widget.automobile!.frontAxleOilType ?? '';
+      _frontAxleOilCapacityController.text =
+          widget.automobile!.frontAxleOilCapacity?.toString() ?? '';
+      _rearAxleTypeController.text = widget.automobile!.rearAxleType ?? '';
+      _rearAxleOilTypeController.text = widget.automobile!.rearAxleOilType ?? '';
+      _rearAxleOilCapacityController.text =
+          widget.automobile!.rearAxleOilCapacity?.toString() ?? '';
     }
   }
 
@@ -62,6 +92,18 @@ class _AddAutomobileScreenState extends State<AddAutomobileScreen> {
     _engineOilCapacityController.dispose();
     _coolantTypeController.dispose();
     _coolantVolumeController.dispose();
+    _transmissionTypeController.dispose();
+    _transmissionLiquidTypeController.dispose();
+    _transmissionLiquidVolumeController.dispose();
+    _transferCaseTypeController.dispose();
+    _transferCaseOilTypeController.dispose();
+    _transferCaseOilCapacityController.dispose();
+    _frontAxleTypeController.dispose();
+    _frontAxleOilTypeController.dispose();
+    _frontAxleOilCapacityController.dispose();
+    _rearAxleTypeController.dispose();
+    _rearAxleOilTypeController.dispose();
+    _rearAxleOilCapacityController.dispose();
     super.dispose();
   }
 
@@ -97,6 +139,42 @@ class _AddAutomobileScreenState extends State<AddAutomobileScreen> {
         coolantVolume: _coolantVolumeController.text.trim().isEmpty
             ? null
             : double.tryParse(_coolantVolumeController.text.trim()),
+        transmissionType: _transmissionTypeController.text.trim().isEmpty
+            ? null
+            : _transmissionTypeController.text.trim(),
+        transmissionLiquidType: _transmissionLiquidTypeController.text.trim().isEmpty
+            ? null
+            : _transmissionLiquidTypeController.text.trim(),
+        transmissionLiquidVolume: _transmissionLiquidVolumeController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_transmissionLiquidVolumeController.text.trim()),
+        transferCaseType: _transferCaseTypeController.text.trim().isEmpty
+            ? null
+            : _transferCaseTypeController.text.trim(),
+        transferCaseOilType: _transferCaseOilTypeController.text.trim().isEmpty
+            ? null
+            : _transferCaseOilTypeController.text.trim(),
+        transferCaseOilCapacity: _transferCaseOilCapacityController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_transferCaseOilCapacityController.text.trim()),
+        frontAxleType: _frontAxleTypeController.text.trim().isEmpty
+            ? null
+            : _frontAxleTypeController.text.trim(),
+        frontAxleOilType: _frontAxleOilTypeController.text.trim().isEmpty
+            ? null
+            : _frontAxleOilTypeController.text.trim(),
+        frontAxleOilCapacity: _frontAxleOilCapacityController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_frontAxleOilCapacityController.text.trim()),
+        rearAxleType: _rearAxleTypeController.text.trim().isEmpty
+            ? null
+            : _rearAxleTypeController.text.trim(),
+        rearAxleOilType: _rearAxleOilTypeController.text.trim().isEmpty
+            ? null
+            : _rearAxleOilTypeController.text.trim(),
+        rearAxleOilCapacity: _rearAxleOilCapacityController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_rearAxleOilCapacityController.text.trim()),
       );
 
       if (widget.automobile == null) {
@@ -282,6 +360,168 @@ class _AddAutomobileScreenState extends State<AddAutomobileScreen> {
                   final volume = double.tryParse(value.trim());
                   if (volume == null || volume <= 0) {
                     return 'Please enter a valid volume';
+                  }
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppConstants.paddingLarge),
+            const Divider(),
+            const SizedBox(height: AppConstants.paddingSmall),
+            const Text(
+              'Drivetrain Specifications (Optional)',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            // Transmission
+            TextFormField(
+              controller: _transmissionTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Transmission Type',
+                hintText: 'e.g., Automatic 8-speed, Manual 6-speed',
+                prefixIcon: Icon(Icons.settings_suggest),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _transmissionLiquidTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Transmission Fluid Type',
+                hintText: 'e.g., ATF+4, Dexron VI',
+                prefixIcon: Icon(Icons.opacity),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _transmissionLiquidVolumeController,
+              decoration: const InputDecoration(
+                labelText: 'Transmission Fluid Volume (Liters)',
+                hintText: 'e.g., 7.5',
+                prefixIcon: Icon(Icons.local_gas_station),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value != null && value.trim().isNotEmpty) {
+                  final volume = double.tryParse(value.trim());
+                  if (volume == null || volume <= 0) {
+                    return 'Please enter a valid volume';
+                  }
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            // Transfer Case
+            TextFormField(
+              controller: _transferCaseTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Transfer Case Type',
+                hintText: 'e.g., 4WD, AWD',
+                prefixIcon: Icon(Icons.settings_input_component),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _transferCaseOilTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Transfer Case Oil Type',
+                hintText: 'e.g., ATF, 75W-90',
+                prefixIcon: Icon(Icons.opacity),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _transferCaseOilCapacityController,
+              decoration: const InputDecoration(
+                labelText: 'Transfer Case Oil Capacity (Liters)',
+                hintText: 'e.g., 1.5',
+                prefixIcon: Icon(Icons.local_gas_station),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value != null && value.trim().isNotEmpty) {
+                  final capacity = double.tryParse(value.trim());
+                  if (capacity == null || capacity <= 0) {
+                    return 'Please enter a valid capacity';
+                  }
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            // Front Axle
+            TextFormField(
+              controller: _frontAxleTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Front Axle Type',
+                hintText: 'e.g., Independent, Solid',
+                prefixIcon: Icon(Icons.trip_origin),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _frontAxleOilTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Front Axle Oil Type',
+                hintText: 'e.g., 75W-90, 80W-90',
+                prefixIcon: Icon(Icons.opacity),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _frontAxleOilCapacityController,
+              decoration: const InputDecoration(
+                labelText: 'Front Axle Oil Capacity (Liters)',
+                hintText: 'e.g., 1.2',
+                prefixIcon: Icon(Icons.local_gas_station),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value != null && value.trim().isNotEmpty) {
+                  final capacity = double.tryParse(value.trim());
+                  if (capacity == null || capacity <= 0) {
+                    return 'Please enter a valid capacity';
+                  }
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            // Rear Axle
+            TextFormField(
+              controller: _rearAxleTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Rear Axle Type',
+                hintText: 'e.g., Limited Slip, Open',
+                prefixIcon: Icon(Icons.trip_origin),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _rearAxleOilTypeController,
+              decoration: const InputDecoration(
+                labelText: 'Rear Axle Oil Type',
+                hintText: 'e.g., 75W-140, 85W-140',
+                prefixIcon: Icon(Icons.opacity),
+              ),
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _rearAxleOilCapacityController,
+              decoration: const InputDecoration(
+                labelText: 'Rear Axle Oil Capacity (Liters)',
+                hintText: 'e.g., 2.5',
+                prefixIcon: Icon(Icons.local_gas_station),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value != null && value.trim().isNotEmpty) {
+                  final capacity = double.tryParse(value.trim());
+                  if (capacity == null || capacity <= 0) {
+                    return 'Please enter a valid capacity';
                   }
                 }
                 return null;

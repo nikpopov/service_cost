@@ -24,6 +24,7 @@ class _AddServiceRecordScreenState extends State<AddServiceRecordScreen> {
   final _titleController = TextEditingController();
   final _costController = TextEditingController();
   final _mileageController = TextEditingController();
+  final _motorHoursController = TextEditingController();
   final _serviceProviderController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _notesController = TextEditingController();
@@ -40,6 +41,7 @@ class _AddServiceRecordScreenState extends State<AddServiceRecordScreen> {
       _selectedType = widget.serviceRecord!.type;
       _costController.text = widget.serviceRecord!.cost.toString();
       _mileageController.text = widget.serviceRecord!.mileage?.toString() ?? '';
+      _motorHoursController.text = widget.serviceRecord!.motorHours?.toString() ?? '';
       _serviceProviderController.text =
           widget.serviceRecord!.serviceProvider ?? '';
       _selectedDate = widget.serviceRecord!.serviceDate;
@@ -53,6 +55,7 @@ class _AddServiceRecordScreenState extends State<AddServiceRecordScreen> {
     _titleController.dispose();
     _costController.dispose();
     _mileageController.dispose();
+    _motorHoursController.dispose();
     _serviceProviderController.dispose();
     _descriptionController.dispose();
     _notesController.dispose();
@@ -87,6 +90,9 @@ class _AddServiceRecordScreenState extends State<AddServiceRecordScreen> {
         mileage: _mileageController.text.trim().isEmpty
             ? null
             : int.parse(_mileageController.text.trim()),
+        motorHours: _motorHoursController.text.trim().isEmpty
+            ? null
+            : int.parse(_motorHoursController.text.trim()),
         serviceProvider: _serviceProviderController.text.trim().isEmpty
             ? null
             : _serviceProviderController.text.trim(),
@@ -209,6 +215,17 @@ class _AddServiceRecordScreenState extends State<AddServiceRecordScreen> {
                 hintText: 'e.g., 50000',
                 prefixIcon: Icon(Icons.speed),
                 suffixText: 'km',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: AppConstants.paddingMedium),
+            TextFormField(
+              controller: _motorHoursController,
+              decoration: const InputDecoration(
+                labelText: 'Motor Hours (Optional)',
+                hintText: 'e.g., 500',
+                prefixIcon: Icon(Icons.access_time),
+                suffixText: 'hrs',
               ),
               keyboardType: TextInputType.number,
             ),

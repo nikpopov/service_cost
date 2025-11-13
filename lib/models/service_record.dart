@@ -12,6 +12,7 @@ class ServiceRecord {
   final ServiceType type;
   final double cost;
   final int? mileage;
+  final int? motorHours; // Motor hours at time of service
   final String? serviceProvider;
   final DateTime serviceDate;
   final String? description;
@@ -29,6 +30,7 @@ class ServiceRecord {
     required this.type,
     required this.cost,
     this.mileage,
+    this.motorHours,
     this.serviceProvider,
     required this.serviceDate,
     this.description,
@@ -52,6 +54,7 @@ class ServiceRecord {
       'type': type.name,
       'cost': cost,
       'mileage': mileage,
+      'motorHours': motorHours,
       'serviceProvider': serviceProvider,
       'serviceDate': serviceDate.toIso8601String(),
       'description': description,
@@ -70,6 +73,7 @@ class ServiceRecord {
       type: ServiceType.values.firstWhere((e) => e.name == map['type']),
       cost: map['cost'],
       mileage: map['mileage'],
+      motorHours: map['motorHours'],
       serviceProvider: map['serviceProvider'],
       serviceDate: DateTime.parse(map['serviceDate']),
       description: map['description'],
@@ -87,6 +91,7 @@ class ServiceRecord {
     ServiceType? type,
     double? cost,
     int? mileage,
+    int? motorHours,
     String? serviceProvider,
     DateTime? serviceDate,
     String? description,
@@ -102,6 +107,7 @@ class ServiceRecord {
       type: type ?? this.type,
       cost: cost ?? this.cost,
       mileage: mileage ?? this.mileage,
+      motorHours: motorHours ?? this.motorHours,
       serviceProvider: serviceProvider ?? this.serviceProvider,
       serviceDate: serviceDate ?? this.serviceDate,
       description: description ?? this.description,

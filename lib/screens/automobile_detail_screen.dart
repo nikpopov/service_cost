@@ -197,6 +197,30 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                           'Coolant',
                           '${widget.automobile.coolantType!}${widget.automobile.coolantVolume != null ? ' (${widget.automobile.coolantVolume}L)' : ''}',
                         ),
+                      if (widget.automobile.transmissionType != null)
+                        _buildSpecItem(
+                          Icons.settings_suggest,
+                          'Trans',
+                          '${widget.automobile.transmissionType!}${widget.automobile.transmissionLiquidType != null ? ' (${widget.automobile.transmissionLiquidType!})' : ''}',
+                        ),
+                      if (widget.automobile.transferCaseType != null)
+                        _buildSpecItem(
+                          Icons.settings_input_component,
+                          'T-Case',
+                          '${widget.automobile.transferCaseType!}${widget.automobile.transferCaseOilType != null ? ' (${widget.automobile.transferCaseOilType!})' : ''}',
+                        ),
+                      if (widget.automobile.frontAxleType != null)
+                        _buildSpecItem(
+                          Icons.trip_origin,
+                          'Front Axle',
+                          '${widget.automobile.frontAxleType!}${widget.automobile.frontAxleOilType != null ? ' (${widget.automobile.frontAxleOilType!})' : ''}',
+                        ),
+                      if (widget.automobile.rearAxleType != null)
+                        _buildSpecItem(
+                          Icons.trip_origin,
+                          'Rear Axle',
+                          '${widget.automobile.rearAxleType!}${widget.automobile.rearAxleOilType != null ? ' (${widget.automobile.rearAxleOilType!})' : ''}',
+                        ),
                     ],
                   ),
                 ],
@@ -440,7 +464,12 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
   bool _hasSpecifications(Automobile automobile) {
     return automobile.engineType != null ||
         automobile.engineOilType != null ||
-        automobile.coolantType != null;
+        automobile.coolantType != null ||
+        automobile.transmissionType != null ||
+        automobile.transmissionLiquidType != null ||
+        automobile.transferCaseType != null ||
+        automobile.frontAxleType != null ||
+        automobile.rearAxleType != null;
   }
 
   Widget _buildSpecItem(IconData icon, String label, String value) {
