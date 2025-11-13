@@ -59,6 +59,12 @@ class DatabaseService {
         purchaseDate TEXT NOT NULL,
         notes TEXT,
         createdAt TEXT NOT NULL,
+        orderPlacedDate TEXT,
+        shipmentDate TEXT,
+        deliveryToWarehouseDate TEXT,
+        expectedDeliveryDate TEXT,
+        receivingDate TEXT,
+        shippingMethod TEXT,
         FOREIGN KEY (automobileId) REFERENCES automobiles (id) ON DELETE CASCADE
       )
     ''');

@@ -54,6 +54,13 @@ Represents a spare part with:
 - Source: imported or local
 - Import details: import cost, shipping cost, customs clearance cost, origin country
 - Purchase info: supplier, date, notes
+- Shipment tracking (for imported parts):
+  - Order placed date
+  - Shipment date
+  - Delivery to warehouse date
+  - Expected delivery date
+  - Receiving date
+  - Shipping method (sea or air freight)
 
 ### ServiceRecord
 Represents a service/maintenance record with:
@@ -94,6 +101,12 @@ Foreign key constraints ensure data integrity (CASCADE DELETE).
 - For imported parts: track import costs, shipping, customs clearance, and origin
 - Calculate total cost including all fees
 - Record supplier and purchase date
+- **Shipment Tracking** for imported parts:
+  - Track complete shipment lifecycle (order → shipment → warehouse → receiving)
+  - Monitor expected vs. actual delivery dates
+  - Select shipping method (sea or air freight)
+  - Visual timeline display showing shipment progress
+  - Clear status indicators for each milestone
 
 ### Service Cost Tracking
 - Track maintenance, repairs, inspections

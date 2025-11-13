@@ -35,6 +35,14 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
 
+  // Shipment tracking dates (for imported parts)
+  DateTime? _orderPlacedDate;
+  DateTime? _shipmentDate;
+  DateTime? _deliveryToWarehouseDate;
+  DateTime? _expectedDeliveryDate;
+  DateTime? _receivingDate;
+  ShippingMethod? _selectedShippingMethod;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +60,14 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
       _originCountryController.text = widget.sparePart!.originCountry ?? '';
       _selectedDate = widget.sparePart!.purchaseDate;
       _notesController.text = widget.sparePart!.notes ?? '';
+
+      // Shipment tracking
+      _orderPlacedDate = widget.sparePart!.orderPlacedDate;
+      _shipmentDate = widget.sparePart!.shipmentDate;
+      _deliveryToWarehouseDate = widget.sparePart!.deliveryToWarehouseDate;
+      _expectedDeliveryDate = widget.sparePart!.expectedDeliveryDate;
+      _receivingDate = widget.sparePart!.receivingDate;
+      _selectedShippingMethod = widget.sparePart!.shippingMethod;
     }
   }
 
@@ -78,6 +94,56 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
     );
     if (picked != null) {
       setState(() => _selectedDate = picked);
+    }
+  }
+
+  Future<void> _selectShipmentDate(String field) async {
+    DateTime? initialDate;
+    switch (field) {
+      case 'orderPlaced':
+        initialDate = _orderPlacedDate;
+        break;
+      case 'shipment':
+        initialDate = _shipmentDate;
+        break;
+      case 'deliveryToWarehouse':
+        initialDate = _deliveryToWarehouseDate;
+        break;
+      case 'expectedDelivery':
+        initialDate = _expectedDeliveryDate;
+        break;
+      case 'receiving':
+        initialDate = _receivingDate;
+        break;
+    }
+
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (picked != null) {
+      setState(() {
+        switch (field) {
+          case 'orderPlaced':
+            _orderPlacedDate = picked;
+            break;
+          case 'shipment':
+            _shipmentDate = picked;
+            break;
+          case 'deliveryToWarehouse':
+            _deliveryToWarehouseDate = picked;
+            break;
+          case 'expectedDelivery':
+            _expectedDeliveryDate = picked;
+            break;
+          case 'receiving':
+            _receivingDate = picked;
+            break;
+        }
+      });
     }
   }
 
@@ -117,6 +183,12 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
             ? null
             : _notesController.text.trim(),
         createdAt: widget.sparePart?.createdAt ?? DateTime.now(),
+        orderPlacedDate: _orderPlacedDate,
+        shipmentDate: _shipmentDate,
+        deliveryToWarehouseDate: _deliveryToWarehouseDate,
+        expectedDeliveryDate: _expectedDeliveryDate,
+        receivingDate: _receivingDate,
+        shippingMethod: _selectedShippingMethod,
       );
 
       if (widget.sparePart == null) {
@@ -259,6 +331,61 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
                   prefixIcon: Icon(Icons.flag),
                 ),
               ),
+              const SizedBox(height: AppConstants.paddingLarge),
+              const Text(
+                'Shipment Tracking (Optional)',
+                style: TextStyle(
+                  fontSize: AppConstants.fontSizeLarge,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: AppConstants.paddingMedium),
+              DropdownButtonFormField<ShippingMethod>(
+                value: _selectedShippingMethod,
+                decoration: const InputDecoration(
+                  labelText: 'Shipping Method',
+                  prefixIcon: Icon(Icons.local_shipping),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: ShippingMethod.sea,
+                    child: Text('Sea Freight'),
+                  ),
+                  DropdownMenuItem(
+                    value: ShippingMethod.air,
+                    child: Text('Air Freight'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() => _selectedShippingMethod = value);
+                },
+              ),
+              const SizedBox(height: AppConstants.paddingMedium),
+              _buildDateSelector(
+                'Order Placed Date',
+                _orderPlacedDate,
+                () => _selectShipmentDate('orderPlaced'),
+              ),
+              _buildDateSelector(
+                'Shipment Date',
+                _shipmentDate,
+                () => _selectShipmentDate('shipment'),
+              ),
+              _buildDateSelector(
+                'Delivery to Warehouse Date',
+                _deliveryToWarehouseDate,
+                () => _selectShipmentDate('deliveryToWarehouse'),
+              ),
+              _buildDateSelector(
+                'Expected Delivery Date',
+                _expectedDeliveryDate,
+                () => _selectShipmentDate('expectedDelivery'),
+              ),
+              _buildDateSelector(
+                'Receiving Date',
+                _receivingDate,
+                () => _selectShipmentDate('receiving'),
+              ),
             ],
             const SizedBox(height: AppConstants.paddingMedium),
             TextFormField(
@@ -313,6 +440,45 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildDateSelector(String label, DateTime? date, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: const Icon(Icons.calendar_today),
+      title: Text(label),
+      subtitle: Text(
+        date != null
+            ? '${date.day}/${date.month}/${date.year}'
+            : 'Not set',
+        style: TextStyle(
+          color: date != null
+              ? AppConstants.textPrimaryColor
+              : AppConstants.textSecondaryColor,
+        ),
+      ),
+      trailing: date != null
+          ? IconButton(
+              icon: const Icon(Icons.clear, size: 20),
+              onPressed: () {
+                setState(() {
+                  if (label.contains('Order Placed')) {
+                    _orderPlacedDate = null;
+                  } else if (label.contains('Shipment')) {
+                    _shipmentDate = null;
+                  } else if (label.contains('Warehouse')) {
+                    _deliveryToWarehouseDate = null;
+                  } else if (label.contains('Expected')) {
+                    _expectedDeliveryDate = null;
+                  } else if (label.contains('Receiving')) {
+                    _receivingDate = null;
+                  }
+                });
+              },
+            )
+          : const Icon(Icons.edit),
+      onTap: onTap,
     );
   }
 }

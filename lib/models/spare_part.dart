@@ -3,6 +3,11 @@ enum PartSource {
   local,
 }
 
+enum ShippingMethod {
+  sea,
+  air,
+}
+
 class SparePart {
   final String id;
   final String automobileId;
@@ -19,6 +24,14 @@ class SparePart {
   final String? notes;
   final DateTime createdAt;
 
+  // Shipment tracking fields (only for imported parts)
+  final DateTime? orderPlacedDate;
+  final DateTime? shipmentDate;
+  final DateTime? deliveryToWarehouseDate;
+  final DateTime? expectedDeliveryDate;
+  final DateTime? receivingDate;
+  final ShippingMethod? shippingMethod;
+
   SparePart({
     required this.id,
     required this.automobileId,
@@ -34,6 +47,12 @@ class SparePart {
     required this.purchaseDate,
     this.notes,
     required this.createdAt,
+    this.orderPlacedDate,
+    this.shipmentDate,
+    this.deliveryToWarehouseDate,
+    this.expectedDeliveryDate,
+    this.receivingDate,
+    this.shippingMethod,
   });
 
   double get totalCost {
@@ -60,6 +79,12 @@ class SparePart {
       'purchaseDate': purchaseDate.toIso8601String(),
       'notes': notes,
       'createdAt': createdAt.toIso8601String(),
+      'orderPlacedDate': orderPlacedDate?.toIso8601String(),
+      'shipmentDate': shipmentDate?.toIso8601String(),
+      'deliveryToWarehouseDate': deliveryToWarehouseDate?.toIso8601String(),
+      'expectedDeliveryDate': expectedDeliveryDate?.toIso8601String(),
+      'receivingDate': receivingDate?.toIso8601String(),
+      'shippingMethod': shippingMethod?.name,
     };
   }
 
@@ -79,6 +104,23 @@ class SparePart {
       purchaseDate: DateTime.parse(map['purchaseDate']),
       notes: map['notes'],
       createdAt: DateTime.parse(map['createdAt']),
+      orderPlacedDate: map['orderPlacedDate'] != null
+          ? DateTime.parse(map['orderPlacedDate'])
+          : null,
+      shipmentDate:
+          map['shipmentDate'] != null ? DateTime.parse(map['shipmentDate']) : null,
+      deliveryToWarehouseDate: map['deliveryToWarehouseDate'] != null
+          ? DateTime.parse(map['deliveryToWarehouseDate'])
+          : null,
+      expectedDeliveryDate: map['expectedDeliveryDate'] != null
+          ? DateTime.parse(map['expectedDeliveryDate'])
+          : null,
+      receivingDate: map['receivingDate'] != null
+          ? DateTime.parse(map['receivingDate'])
+          : null,
+      shippingMethod: map['shippingMethod'] != null
+          ? ShippingMethod.values.firstWhere((e) => e.name == map['shippingMethod'])
+          : null,
     );
   }
 
@@ -97,6 +139,12 @@ class SparePart {
     DateTime? purchaseDate,
     String? notes,
     DateTime? createdAt,
+    DateTime? orderPlacedDate,
+    DateTime? shipmentDate,
+    DateTime? deliveryToWarehouseDate,
+    DateTime? expectedDeliveryDate,
+    DateTime? receivingDate,
+    ShippingMethod? shippingMethod,
   }) {
     return SparePart(
       id: id ?? this.id,
@@ -113,6 +161,12 @@ class SparePart {
       purchaseDate: purchaseDate ?? this.purchaseDate,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
+      orderPlacedDate: orderPlacedDate ?? this.orderPlacedDate,
+      shipmentDate: shipmentDate ?? this.shipmentDate,
+      deliveryToWarehouseDate: deliveryToWarehouseDate ?? this.deliveryToWarehouseDate,
+      expectedDeliveryDate: expectedDeliveryDate ?? this.expectedDeliveryDate,
+      receivingDate: receivingDate ?? this.receivingDate,
+      shippingMethod: shippingMethod ?? this.shippingMethod,
     );
   }
 }

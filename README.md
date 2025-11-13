@@ -9,6 +9,11 @@ A Flutter application for tracking spare parts and service costs for multiple fa
   - Record imported/ordered parts with import costs, shipping, and customs clearance
   - Record locally purchased parts
   - Track part details (name, price, supplier, purchase date)
+  - **Shipment Tracking** for imported parts:
+    - Track order placement, shipment, warehouse delivery, and receiving dates
+    - Monitor expected delivery dates
+    - Distinguish between sea and air freight
+    - Visual timeline display of shipment progress
 - **Service Cost Tracking**: Monitor service and repair costs
 - **Cost Analysis**:
   - Total costs per vehicle
