@@ -7,6 +7,13 @@ class Automobile {
   final String? vin;
   final DateTime createdAt;
 
+  // Engine and fluid specifications
+  final String? engineType;
+  final String? engineOilType;
+  final double? engineOilCapacity; // in liters
+  final String? coolantType;
+  final double? coolantVolume; // in liters
+
   Automobile({
     required this.id,
     required this.make,
@@ -15,6 +22,11 @@ class Automobile {
     required this.licensePlate,
     this.vin,
     required this.createdAt,
+    this.engineType,
+    this.engineOilType,
+    this.engineOilCapacity,
+    this.coolantType,
+    this.coolantVolume,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +38,11 @@ class Automobile {
       'licensePlate': licensePlate,
       'vin': vin,
       'createdAt': createdAt.toIso8601String(),
+      'engineType': engineType,
+      'engineOilType': engineOilType,
+      'engineOilCapacity': engineOilCapacity,
+      'coolantType': coolantType,
+      'coolantVolume': coolantVolume,
     };
   }
 
@@ -38,6 +55,11 @@ class Automobile {
       licensePlate: map['licensePlate'],
       vin: map['vin'],
       createdAt: DateTime.parse(map['createdAt']),
+      engineType: map['engineType'],
+      engineOilType: map['engineOilType'],
+      engineOilCapacity: map['engineOilCapacity'],
+      coolantType: map['coolantType'],
+      coolantVolume: map['coolantVolume'],
     );
   }
 
@@ -51,6 +73,11 @@ class Automobile {
     String? licensePlate,
     String? vin,
     DateTime? createdAt,
+    String? engineType,
+    String? engineOilType,
+    double? engineOilCapacity,
+    String? coolantType,
+    double? coolantVolume,
   }) {
     return Automobile(
       id: id ?? this.id,
@@ -60,6 +87,11 @@ class Automobile {
       licensePlate: licensePlate ?? this.licensePlate,
       vin: vin ?? this.vin,
       createdAt: createdAt ?? this.createdAt,
+      engineType: engineType ?? this.engineType,
+      engineOilType: engineOilType ?? this.engineOilType,
+      engineOilCapacity: engineOilCapacity ?? this.engineOilCapacity,
+      coolantType: coolantType ?? this.coolantType,
+      coolantVolume: coolantVolume ?? this.coolantVolume,
     );
   }
 }

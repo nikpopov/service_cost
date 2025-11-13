@@ -23,8 +23,9 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -38,7 +39,12 @@ class DatabaseService {
         year INTEGER NOT NULL,
         licensePlate TEXT NOT NULL,
         vin TEXT,
-        createdAt TEXT NOT NULL
+        createdAt TEXT NOT NULL,
+        engineType TEXT,
+        engineOilType TEXT,
+        engineOilCapacity REAL,
+        coolantType TEXT,
+        coolantVolume REAL
       )
     ''');
 
@@ -96,6 +102,17 @@ class DatabaseService {
         'CREATE INDEX idx_spare_parts_automobile ON spare_parts(automobileId)');
     await db.execute(
         'CREATE INDEX idx_service_records_automobile ON service_records(automobileId)');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add engine and fluid specification columns to automobiles table
+      await db.execute('ALTER TABLE automobiles ADD COLUMN engineType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN engineOilType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN engineOilCapacity REAL');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN coolantType TEXT');
+      await db.execute('ALTER TABLE automobiles ADD COLUMN coolantVolume REAL');
+    }
   }
 
   Future<void> close() async {

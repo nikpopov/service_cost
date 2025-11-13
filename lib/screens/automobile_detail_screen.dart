@@ -146,6 +146,62 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
               );
             },
           ),
+          // Engine & Fluid Specifications Card
+          if (_hasSpecifications(widget.automobile))
+            Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: AppConstants.paddingMedium,
+                vertical: AppConstants.paddingSmall,
+              ),
+              padding: const EdgeInsets.all(AppConstants.paddingMedium),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.info_outline, size: 20),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Specifications',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 4,
+                    children: [
+                      if (widget.automobile.engineType != null)
+                        _buildSpecItem(
+                          Icons.settings,
+                          'Engine',
+                          widget.automobile.engineType!,
+                        ),
+                      if (widget.automobile.engineOilType != null)
+                        _buildSpecItem(
+                          Icons.opacity,
+                          'Oil',
+                          '${widget.automobile.engineOilType!}${widget.automobile.engineOilCapacity != null ? ' (${widget.automobile.engineOilCapacity}L)' : ''}',
+                        ),
+                      if (widget.automobile.coolantType != null)
+                        _buildSpecItem(
+                          Icons.ac_unit,
+                          'Coolant',
+                          '${widget.automobile.coolantType!}${widget.automobile.coolantVolume != null ? ' (${widget.automobile.coolantVolume}L)' : ''}',
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           // Tabs Content
           Expanded(
             child: TabBarView(
@@ -379,5 +435,36 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
 
   String _padZero(int number) {
     return number.toString().padLeft(2, '0');
+  }
+
+  bool _hasSpecifications(Automobile automobile) {
+    return automobile.engineType != null ||
+        automobile.engineOilType != null ||
+        automobile.coolantType != null;
+  }
+
+  Widget _buildSpecItem(IconData icon, String label, String value) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: Colors.grey[700]),
+        const SizedBox(width: 4),
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[700],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ],
+    );
   }
 }
