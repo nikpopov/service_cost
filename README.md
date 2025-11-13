@@ -6,7 +6,7 @@ A Flutter application for tracking spare parts and service costs for multiple fa
 
 - **Multi-Vehicle Management**: Track multiple cars in your family
 - **Spare Parts Tracking**:
-  - Record imported/ordered parts with import costs
+  - Record imported/ordered parts with import costs, shipping, and customs clearance
   - Record locally purchased parts
   - Track part details (name, price, supplier, purchase date)
 - **Service Cost Tracking**: Monitor service and repair costs

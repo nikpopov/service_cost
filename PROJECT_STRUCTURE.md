@@ -52,7 +52,7 @@ Represents a vehicle with make, model, year, license plate, and optional VIN.
 Represents a spare part with:
 - Basic info: name, part number, price
 - Source: imported or local
-- Import details: import cost, shipping cost, origin country
+- Import details: import cost, shipping cost, customs clearance cost, origin country
 - Purchase info: supplier, date, notes
 
 ### ServiceRecord
@@ -91,7 +91,7 @@ Foreign key constraints ensure data integrity (CASCADE DELETE).
 
 ### Spare Parts Tracking
 - Track both imported and locally purchased parts
-- For imported parts: track import costs, shipping, and origin
+- For imported parts: track import costs, shipping, customs clearance, and origin
 - Calculate total cost including all fees
 - Record supplier and purchase date
 

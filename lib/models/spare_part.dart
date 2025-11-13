@@ -12,6 +12,7 @@ class SparePart {
   final PartSource source;
   final double? importCost; // Only for imported parts
   final double? shippingCost; // Only for imported parts
+  final double? customsClearanceCost; // Only for imported parts
   final String? supplier;
   final String? originCountry; // For imported parts
   final DateTime purchaseDate;
@@ -27,6 +28,7 @@ class SparePart {
     required this.source,
     this.importCost,
     this.shippingCost,
+    this.customsClearanceCost,
     this.supplier,
     this.originCountry,
     required this.purchaseDate,
@@ -37,7 +39,7 @@ class SparePart {
   double get totalCost {
     double total = price;
     if (source == PartSource.imported) {
-      total += (importCost ?? 0) + (shippingCost ?? 0);
+      total += (importCost ?? 0) + (shippingCost ?? 0) + (customsClearanceCost ?? 0);
     }
     return total;
   }
@@ -52,6 +54,7 @@ class SparePart {
       'source': source.name,
       'importCost': importCost,
       'shippingCost': shippingCost,
+      'customsClearanceCost': customsClearanceCost,
       'supplier': supplier,
       'originCountry': originCountry,
       'purchaseDate': purchaseDate.toIso8601String(),
@@ -70,6 +73,7 @@ class SparePart {
       source: PartSource.values.firstWhere((e) => e.name == map['source']),
       importCost: map['importCost'],
       shippingCost: map['shippingCost'],
+      customsClearanceCost: map['customsClearanceCost'],
       supplier: map['supplier'],
       originCountry: map['originCountry'],
       purchaseDate: DateTime.parse(map['purchaseDate']),
@@ -87,6 +91,7 @@ class SparePart {
     PartSource? source,
     double? importCost,
     double? shippingCost,
+    double? customsClearanceCost,
     String? supplier,
     String? originCountry,
     DateTime? purchaseDate,
@@ -102,6 +107,7 @@ class SparePart {
       source: source ?? this.source,
       importCost: importCost ?? this.importCost,
       shippingCost: shippingCost ?? this.shippingCost,
+      customsClearanceCost: customsClearanceCost ?? this.customsClearanceCost,
       supplier: supplier ?? this.supplier,
       originCountry: originCountry ?? this.originCountry,
       purchaseDate: purchaseDate ?? this.purchaseDate,

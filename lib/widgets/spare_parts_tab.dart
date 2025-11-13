@@ -132,17 +132,21 @@ class SparePartsTab extends StatelessWidget {
               ],
             ),
             if (part.source == PartSource.imported &&
-                (part.importCost != null || part.shippingCost != null)) ...[
+                (part.importCost != null || part.shippingCost != null || part.customsClearanceCost != null)) ...[
               const SizedBox(height: 4),
               Row(
                 children: [
                   const Icon(Icons.flight_takeoff, size: 16),
-                  Text(
-                    'Import: ${Formatters.formatCurrency(part.importCost ?? 0)} | '
-                    'Shipping: ${Formatters.formatCurrency(part.shippingCost ?? 0)}',
-                    style: TextStyle(
-                      fontSize: AppConstants.fontSizeSmall,
-                      color: AppConstants.textSecondaryColor,
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'Import: ${Formatters.formatCurrency(part.importCost ?? 0)} | '
+                      'Shipping: ${Formatters.formatCurrency(part.shippingCost ?? 0)} | '
+                      'Customs: ${Formatters.formatCurrency(part.customsClearanceCost ?? 0)}',
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeSmall,
+                        color: AppConstants.textSecondaryColor,
+                      ),
                     ),
                   ),
                 ],

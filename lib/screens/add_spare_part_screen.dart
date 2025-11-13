@@ -26,6 +26,7 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
   final _priceController = TextEditingController();
   final _importCostController = TextEditingController();
   final _shippingCostController = TextEditingController();
+  final _customsClearanceCostController = TextEditingController();
   final _supplierController = TextEditingController();
   final _originCountryController = TextEditingController();
   final _notesController = TextEditingController();
@@ -45,6 +46,8 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
       _importCostController.text = widget.sparePart!.importCost?.toString() ?? '';
       _shippingCostController.text =
           widget.sparePart!.shippingCost?.toString() ?? '';
+      _customsClearanceCostController.text =
+          widget.sparePart!.customsClearanceCost?.toString() ?? '';
       _supplierController.text = widget.sparePart!.supplier ?? '';
       _originCountryController.text = widget.sparePart!.originCountry ?? '';
       _selectedDate = widget.sparePart!.purchaseDate;
@@ -59,6 +62,7 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
     _priceController.dispose();
     _importCostController.dispose();
     _shippingCostController.dispose();
+    _customsClearanceCostController.dispose();
     _supplierController.dispose();
     _originCountryController.dispose();
     _notesController.dispose();
@@ -99,6 +103,9 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
         shippingCost: _shippingCostController.text.trim().isEmpty
             ? null
             : double.parse(_shippingCostController.text.trim()),
+        customsClearanceCost: _customsClearanceCostController.text.trim().isEmpty
+            ? null
+            : double.parse(_customsClearanceCostController.text.trim()),
         supplier: _supplierController.text.trim().isEmpty
             ? null
             : _supplierController.text.trim(),
@@ -230,6 +237,16 @@ class _AddSparePartScreenState extends State<AddSparePartScreen> {
                   labelText: 'Shipping Cost (Optional)',
                   hintText: 'e.g., 15.00',
                   prefixIcon: Icon(Icons.flight_takeoff),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: AppConstants.paddingMedium),
+              TextFormField(
+                controller: _customsClearanceCostController,
+                decoration: const InputDecoration(
+                  labelText: 'Customs Clearance Cost (Optional)',
+                  hintText: 'e.g., 20.00',
+                  prefixIcon: Icon(Icons.account_balance),
                 ),
                 keyboardType: TextInputType.number,
               ),

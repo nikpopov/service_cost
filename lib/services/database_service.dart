@@ -53,6 +53,7 @@ class DatabaseService {
         source TEXT NOT NULL,
         importCost REAL,
         shippingCost REAL,
+        customsClearanceCost REAL,
         supplier TEXT,
         originCountry TEXT,
         purchaseDate TEXT NOT NULL,
