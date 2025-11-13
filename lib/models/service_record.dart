@@ -18,6 +18,10 @@ class ServiceRecord {
   final String? notes;
   final DateTime createdAt;
 
+  // Currency and exchange rate
+  final String? paymentCurrency; // Currency code (e.g., 'USD', 'EUR')
+  final double? exchangeRateToCalculation; // Rate to convert to calculation currency
+
   ServiceRecord({
     required this.id,
     required this.automobileId,
@@ -30,7 +34,15 @@ class ServiceRecord {
     this.description,
     this.notes,
     required this.createdAt,
+    this.paymentCurrency,
+    this.exchangeRateToCalculation,
   });
+
+  // Get cost converted to calculation currency
+  double get costInCalculationCurrency {
+    final rate = exchangeRateToCalculation ?? 1.0;
+    return cost * rate;
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -45,6 +57,8 @@ class ServiceRecord {
       'description': description,
       'notes': notes,
       'createdAt': createdAt.toIso8601String(),
+      'paymentCurrency': paymentCurrency,
+      'exchangeRateToCalculation': exchangeRateToCalculation,
     };
   }
 
@@ -61,6 +75,8 @@ class ServiceRecord {
       description: map['description'],
       notes: map['notes'],
       createdAt: DateTime.parse(map['createdAt']),
+      paymentCurrency: map['paymentCurrency'],
+      exchangeRateToCalculation: map['exchangeRateToCalculation'],
     );
   }
 
@@ -76,6 +92,8 @@ class ServiceRecord {
     String? description,
     String? notes,
     DateTime? createdAt,
+    String? paymentCurrency,
+    double? exchangeRateToCalculation,
   }) {
     return ServiceRecord(
       id: id ?? this.id,
@@ -89,6 +107,8 @@ class ServiceRecord {
       description: description ?? this.description,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
+      paymentCurrency: paymentCurrency ?? this.paymentCurrency,
+      exchangeRateToCalculation: exchangeRateToCalculation ?? this.exchangeRateToCalculation,
     );
   }
 }

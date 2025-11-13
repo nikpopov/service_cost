@@ -15,10 +15,16 @@ A Flutter application for tracking spare parts and service costs for multiple fa
     - Distinguish between sea and air freight
     - Visual timeline display of shipment progress
 - **Service Cost Tracking**: Monitor service and repair costs
+- **Multi-Currency Support**:
+  - Set a calculation currency for the entire app
+  - Record payments in any currency (USD, EUR, GBP, JPY, CNY, and more)
+  - Set exchange rates for automatic conversion
+  - View costs in both payment and calculation currencies
 - **Cost Analysis**:
-  - Total costs per vehicle
+  - Total costs per vehicle (in calculation currency)
   - Cost breakdown by category (parts vs services)
   - Vehicle cost comparison
+  - Automatic currency conversion for accurate totals
 
 ## Project Structure
 

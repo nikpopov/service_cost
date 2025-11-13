@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'services/automobile_provider.dart';
 import 'services/spare_part_provider.dart';
 import 'services/service_record_provider.dart';
+import 'services/currency_provider.dart';
 import 'utils/constants.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AutomobileProvider()),
         ChangeNotifierProvider(create: (_) => SparePartProvider()),
         ChangeNotifierProvider(create: (_) => ServiceRecordProvider()),
+        ChangeNotifierProvider(create: (_) => CurrencyProvider()..loadCalculationCurrency()),
       ],
       child: MaterialApp(
         title: AppConstants.appName,

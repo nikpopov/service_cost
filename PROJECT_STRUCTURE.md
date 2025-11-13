@@ -61,12 +61,19 @@ Represents a spare part with:
   - Expected delivery date
   - Receiving date
   - Shipping method (sea or air freight)
+- Currency information:
+  - Payment currency (currency used for transaction)
+  - Exchange rate to calculation currency
+  - Automatic cost conversion
 
 ### ServiceRecord
 Represents a service/maintenance record with:
 - Type: maintenance, repair, inspection, other
 - Cost and date
 - Optional: mileage, service provider, description
+- Currency information:
+  - Payment currency
+  - Exchange rate to calculation currency
 
 ### CostSummary
 Aggregates costs for an automobile:

@@ -65,6 +65,8 @@ class DatabaseService {
         expectedDeliveryDate TEXT,
         receivingDate TEXT,
         shippingMethod TEXT,
+        paymentCurrency TEXT,
+        exchangeRateToCalculation REAL,
         FOREIGN KEY (automobileId) REFERENCES automobiles (id) ON DELETE CASCADE
       )
     ''');
@@ -83,6 +85,8 @@ class DatabaseService {
         description TEXT,
         notes TEXT,
         createdAt TEXT NOT NULL,
+        paymentCurrency TEXT,
+        exchangeRateToCalculation REAL,
         FOREIGN KEY (automobileId) REFERENCES automobiles (id) ON DELETE CASCADE
       )
     ''');

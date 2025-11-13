@@ -32,6 +32,10 @@ class SparePart {
   final DateTime? receivingDate;
   final ShippingMethod? shippingMethod;
 
+  // Currency and exchange rate
+  final String? paymentCurrency; // Currency code (e.g., 'USD', 'EUR')
+  final double? exchangeRateToCalculation; // Rate to convert to calculation currency
+
   SparePart({
     required this.id,
     required this.automobileId,
@@ -53,6 +57,8 @@ class SparePart {
     this.expectedDeliveryDate,
     this.receivingDate,
     this.shippingMethod,
+    this.paymentCurrency,
+    this.exchangeRateToCalculation,
   });
 
   double get totalCost {
@@ -61,6 +67,12 @@ class SparePart {
       total += (importCost ?? 0) + (shippingCost ?? 0) + (customsClearanceCost ?? 0);
     }
     return total;
+  }
+
+  // Get total cost converted to calculation currency
+  double get totalCostInCalculationCurrency {
+    final rate = exchangeRateToCalculation ?? 1.0;
+    return totalCost * rate;
   }
 
   Map<String, dynamic> toMap() {
@@ -85,6 +97,8 @@ class SparePart {
       'expectedDeliveryDate': expectedDeliveryDate?.toIso8601String(),
       'receivingDate': receivingDate?.toIso8601String(),
       'shippingMethod': shippingMethod?.name,
+      'paymentCurrency': paymentCurrency,
+      'exchangeRateToCalculation': exchangeRateToCalculation,
     };
   }
 
@@ -121,6 +135,8 @@ class SparePart {
       shippingMethod: map['shippingMethod'] != null
           ? ShippingMethod.values.firstWhere((e) => e.name == map['shippingMethod'])
           : null,
+      paymentCurrency: map['paymentCurrency'],
+      exchangeRateToCalculation: map['exchangeRateToCalculation'],
     );
   }
 
@@ -145,6 +161,8 @@ class SparePart {
     DateTime? expectedDeliveryDate,
     DateTime? receivingDate,
     ShippingMethod? shippingMethod,
+    String? paymentCurrency,
+    double? exchangeRateToCalculation,
   }) {
     return SparePart(
       id: id ?? this.id,
@@ -167,6 +185,8 @@ class SparePart {
       expectedDeliveryDate: expectedDeliveryDate ?? this.expectedDeliveryDate,
       receivingDate: receivingDate ?? this.receivingDate,
       shippingMethod: shippingMethod ?? this.shippingMethod,
+      paymentCurrency: paymentCurrency ?? this.paymentCurrency,
+      exchangeRateToCalculation: exchangeRateToCalculation ?? this.exchangeRateToCalculation,
     );
   }
 }
