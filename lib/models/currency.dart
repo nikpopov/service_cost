@@ -37,6 +37,20 @@ enum Currency {
     return '$symbol${amount.toStringAsFixed(2)}';
   }
 
+  /// Format amount with optional compact notation (e.g., 1.5K, 2.3M)
+  String format(double amount, {bool compact = false}) {
+    if (compact) {
+      if (amount >= 1000000) {
+        final millions = amount / 1000000;
+        return '$symbol${millions.toStringAsFixed(1)}M';
+      } else if (amount >= 1000) {
+        final thousands = amount / 1000;
+        return '$symbol${thousands.toStringAsFixed(1)}K';
+      }
+    }
+    return formatAmount(amount);
+  }
+
   static Currency? fromCode(String? code) {
     if (code == null) return null;
     try {

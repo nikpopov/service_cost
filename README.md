@@ -23,6 +23,12 @@ A Flutter application for tracking spare parts and service costs for multiple fa
 - **Cost Analysis**:
   - Total costs per vehicle (in calculation currency)
   - Cost breakdown by category (parts vs services)
+  - **Period-Based Analysis**:
+    - Breakdown costs by time periods (daily, weekly, monthly, quarterly, yearly)
+    - Visual analytics showing highest/lowest cost periods
+    - Average cost per period calculations
+    - Quick date range selectors (last month, 3 months, 6 months, year)
+    - Expandable period details with parts and services breakdown
   - Vehicle cost comparison
   - Automatic currency conversion for accurate totals
 

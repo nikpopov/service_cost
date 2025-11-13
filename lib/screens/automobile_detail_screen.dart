@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/automobile.dart';
+import '../models/period_cost_breakdown.dart';
 import '../services/cost_calculation_service.dart';
 import '../services/spare_part_provider.dart';
 import '../services/service_record_provider.dart';
+import '../services/currency_provider.dart';
 import '../utils/constants.dart';
 import '../utils/formatters.dart';
 import '../widgets/spare_parts_tab.dart';
 import '../widgets/service_records_tab.dart';
+import '../widgets/period_breakdown_widget.dart';
 import 'add_automobile_screen.dart';
 
 class AutomobileDetailScreen extends StatefulWidget {
@@ -24,10 +27,19 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
   late TabController _tabController;
   final CostCalculationService _costService = CostCalculationService();
 
+  // Period analysis state
+  PeriodType _selectedPeriodType = PeriodType.monthly;
+  DateTime? _startDate;
+  DateTime? _endDate;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+
+    // Initialize date range to last 6 months
+    _endDate = DateTime.now();
+    _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context
@@ -70,6 +82,7 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
           tabs: const [
             Tab(text: 'Spare Parts', icon: Icon(Icons.build)),
             Tab(text: 'Services', icon: Icon(Icons.construction)),
+            Tab(text: 'Period Analysis', icon: Icon(Icons.bar_chart)),
           ],
         ),
       ),
@@ -140,6 +153,7 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
               children: [
                 SparePartsTab(automobileId: widget.automobile.id),
                 ServiceRecordsTab(automobileId: widget.automobile.id),
+                _buildPeriodAnalysisTab(),
               ],
             ),
           ),
@@ -170,5 +184,200 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
         ),
       ],
     );
+  }
+
+  Widget _buildPeriodAnalysisTab() {
+    final currencyProvider = context.watch<CurrencyProvider>();
+    final calculationCurrency = currencyProvider.calculationCurrency;
+
+    return Column(
+      children: [
+        // Period controls card
+        Card(
+          margin: const EdgeInsets.all(AppConstants.paddingMedium),
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.paddingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Analysis Settings',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Period type selector
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_view_month, size: 20),
+                    const SizedBox(width: 8),
+                    const Text('Period Type:'),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButton<PeriodType>(
+                        value: _selectedPeriodType,
+                        isExpanded: true,
+                        items: PeriodType.values.map((type) {
+                          return DropdownMenuItem(
+                            value: type,
+                            child: Text(type.label),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              _selectedPeriodType = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Date range selectors
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildDateSelector(
+                        'Start Date',
+                        _startDate,
+                        (date) => setState(() => _startDate = date),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildDateSelector(
+                        'End Date',
+                        _endDate,
+                        (date) => setState(() => _endDate = date),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Quick date range buttons
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    _buildQuickRangeButton('Last Month', () {
+                      setState(() {
+                        _endDate = DateTime.now();
+                        _startDate = DateTime(_endDate!.year, _endDate!.month - 1, _endDate!.day);
+                      });
+                    }),
+                    _buildQuickRangeButton('Last 3 Months', () {
+                      setState(() {
+                        _endDate = DateTime.now();
+                        _startDate = DateTime(_endDate!.year, _endDate!.month - 3, _endDate!.day);
+                      });
+                    }),
+                    _buildQuickRangeButton('Last 6 Months', () {
+                      setState(() {
+                        _endDate = DateTime.now();
+                        _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
+                      });
+                    }),
+                    _buildQuickRangeButton('Last Year', () {
+                      setState(() {
+                        _endDate = DateTime.now();
+                        _startDate = DateTime(_endDate!.year - 1, _endDate!.month, _endDate!.day);
+                      });
+                    }),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Period breakdown content
+        Expanded(
+          child: _startDate != null && _endDate != null
+              ? FutureBuilder<CostAnalysisByPeriod>(
+                  future: _costService.calculateCostsByPeriod(
+                    automobileId: widget.automobile.id,
+                    periodType: _selectedPeriodType,
+                    startDate: _startDate!,
+                    endDate: _endDate!,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text('No data available'),
+                      );
+                    }
+
+                    return SingleChildScrollView(
+                      padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                      child: PeriodBreakdownWidget(
+                        analysis: snapshot.data!,
+                        calculationCurrency: calculationCurrency,
+                      ),
+                    );
+                  },
+                )
+              : const Center(
+                  child: Text('Please select a date range'),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDateSelector(String label, DateTime? date, Function(DateTime?) onChanged) {
+    return InkWell(
+      onTap: () async {
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: date ?? DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime.now().add(const Duration(days: 365)),
+        );
+        if (picked != null) {
+          onChanged(picked);
+        }
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          suffixIcon: const Icon(Icons.calendar_today),
+        ),
+        child: Text(
+          date != null
+              ? '${date.year}-${_padZero(date.month)}-${_padZero(date.day)}'
+              : 'Select date',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickRangeButton(String label, VoidCallback onPressed) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 12),
+      ),
+    );
+  }
+
+  String _padZero(int number) {
+    return number.toString().padLeft(2, '0');
   }
 }
