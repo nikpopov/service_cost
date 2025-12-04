@@ -417,12 +417,20 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
   }
 
   Widget _buildDateSelector(String label, DateTime? date, Function(DateTime?) onChanged) {
+    // For Start Date, use Jan 1 of current year or user's pre-set date (whichever is earlier)
+    final DateTime defaultFirstDate = label == 'Start Date'
+        ? DateTime(DateTime.now().year, 1, 1)
+        : DateTime(2000);
+    final DateTime firstDateToUse = label == 'Start Date' && _startDate != null
+        ? (_startDate!.isBefore(defaultFirstDate) ? _startDate! : defaultFirstDate)
+        : defaultFirstDate;
+
     return InkWell(
       onTap: () async {
         final picked = await showDatePicker(
           context: context,
           initialDate: date ?? DateTime.now(),
-          firstDate: DateTime(2000),
+          firstDate: firstDateToUse,
           lastDate: DateTime.now().add(const Duration(days: 365)),
         );
         if (picked != null) {
