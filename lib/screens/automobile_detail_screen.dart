@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/automobile.dart';
 import '../models/period_cost_breakdown.dart';
 import '../services/cost_calculation_service.dart';
@@ -37,9 +38,8 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // Initialize date range to last 6 months
-    _endDate = DateTime.now();
-    _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
+    // Load saved date preferences or use defaults
+    _loadDatePreferences();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context
@@ -49,6 +49,46 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
           .read<ServiceRecordProvider>()
           .loadServiceRecordsByAutomobile(widget.automobile.id);
     });
+  }
+
+  Future<void> _loadDatePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedStartDateMillis = prefs.getInt('period_analysis_start_date');
+    final savedEndDateMillis = prefs.getInt('period_analysis_end_date');
+    final savedPeriodType = prefs.getString('period_analysis_period_type');
+
+    setState(() {
+      if (savedStartDateMillis != null && savedEndDateMillis != null) {
+        // Use saved dates
+        _startDate = DateTime.fromMillisecondsSinceEpoch(savedStartDateMillis);
+        _endDate = DateTime.fromMillisecondsSinceEpoch(savedEndDateMillis);
+      } else {
+        // Default to last 6 months
+        _endDate = DateTime.now();
+        _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
+      }
+
+      if (savedPeriodType != null) {
+        try {
+          _selectedPeriodType = PeriodType.values.firstWhere(
+            (type) => type.name == savedPeriodType,
+          );
+        } catch (e) {
+          // Keep default if parsing fails
+        }
+      }
+    });
+  }
+
+  Future<void> _saveDatePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_startDate != null) {
+      await prefs.setInt('period_analysis_start_date', _startDate!.millisecondsSinceEpoch);
+    }
+    if (_endDate != null) {
+      await prefs.setInt('period_analysis_end_date', _endDate!.millisecondsSinceEpoch);
+    }
+    await prefs.setString('period_analysis_period_type', _selectedPeriodType.name);
   }
 
   @override
@@ -310,6 +350,7 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                             setState(() {
                               _selectedPeriodType = value;
                             });
+                            _saveDatePreferences();
                           }
                         },
                       ),
@@ -324,7 +365,10 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                       child: _buildDateSelector(
                         'Start Date',
                         _startDate,
-                        (date) => setState(() => _startDate = date),
+                        (date) {
+                          setState(() => _startDate = date);
+                          _saveDatePreferences();
+                        },
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -332,7 +376,10 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                       child: _buildDateSelector(
                         'End Date',
                         _endDate,
-                        (date) => setState(() => _endDate = date),
+                        (date) {
+                          setState(() => _endDate = date);
+                          _saveDatePreferences();
+                        },
                       ),
                     ),
                   ],
@@ -347,24 +394,28 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                         _endDate = DateTime.now();
                         _startDate = DateTime(_endDate!.year, _endDate!.month - 1, _endDate!.day);
                       });
+                      _saveDatePreferences();
                     }),
                     _buildQuickRangeButton('Last 3 Months', () {
                       setState(() {
                         _endDate = DateTime.now();
                         _startDate = DateTime(_endDate!.year, _endDate!.month - 3, _endDate!.day);
                       });
+                      _saveDatePreferences();
                     }),
                     _buildQuickRangeButton('Last 6 Months', () {
                       setState(() {
                         _endDate = DateTime.now();
                         _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
                       });
+                      _saveDatePreferences();
                     }),
                     _buildQuickRangeButton('Last Year', () {
                       setState(() {
                         _endDate = DateTime.now();
                         _startDate = DateTime(_endDate!.year - 1, _endDate!.month, _endDate!.day);
                       });
+                      _saveDatePreferences();
                     }),
                   ],
                 ),
