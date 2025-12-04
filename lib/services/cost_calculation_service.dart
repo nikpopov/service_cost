@@ -121,6 +121,8 @@ class CostCalculationService {
       automobileId: automobileId,
       periodType: periodType,
       periods: periodBreakdowns,
+      analysisStartDate: startDate,
+      analysisEndDate: endDate,
     );
   }
 
