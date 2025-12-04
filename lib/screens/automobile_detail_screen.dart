@@ -63,9 +63,10 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
         _startDate = DateTime.fromMillisecondsSinceEpoch(savedStartDateMillis);
         _endDate = DateTime.fromMillisecondsSinceEpoch(savedEndDateMillis);
       } else {
-        // Default to last 6 months
-        _endDate = DateTime.now();
-        _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
+        // Default to last 6 months (calculate independently)
+        final now = DateTime.now();
+        _endDate = now;
+        _startDate = DateTime(now.year, now.month - 6, now.day);
       }
 
       if (savedPeriodType != null) {
@@ -390,30 +391,34 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                   spacing: 8,
                   children: [
                     _buildQuickRangeButton('Last Month', () {
+                      final now = DateTime.now();
                       setState(() {
-                        _endDate = DateTime.now();
-                        _startDate = DateTime(_endDate!.year, _endDate!.month - 1, _endDate!.day);
+                        _endDate = now;
+                        _startDate = DateTime(now.year, now.month - 1, now.day);
                       });
                       _saveDatePreferences();
                     }),
                     _buildQuickRangeButton('Last 3 Months', () {
+                      final now = DateTime.now();
                       setState(() {
-                        _endDate = DateTime.now();
-                        _startDate = DateTime(_endDate!.year, _endDate!.month - 3, _endDate!.day);
+                        _endDate = now;
+                        _startDate = DateTime(now.year, now.month - 3, now.day);
                       });
                       _saveDatePreferences();
                     }),
                     _buildQuickRangeButton('Last 6 Months', () {
+                      final now = DateTime.now();
                       setState(() {
-                        _endDate = DateTime.now();
-                        _startDate = DateTime(_endDate!.year, _endDate!.month - 6, _endDate!.day);
+                        _endDate = now;
+                        _startDate = DateTime(now.year, now.month - 6, now.day);
                       });
                       _saveDatePreferences();
                     }),
                     _buildQuickRangeButton('Last Year', () {
+                      final now = DateTime.now();
                       setState(() {
-                        _endDate = DateTime.now();
-                        _startDate = DateTime(_endDate!.year - 1, _endDate!.month, _endDate!.day);
+                        _endDate = now;
+                        _startDate = DateTime(now.year - 1, now.month, now.day);
                       });
                       _saveDatePreferences();
                     }),
