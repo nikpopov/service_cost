@@ -57,6 +57,8 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
     final savedEndDateMillis = prefs.getInt('period_analysis_end_date');
     final savedPeriodType = prefs.getString('period_analysis_period_type');
 
+    if (!mounted) return;
+
     setState(() {
       if (savedStartDateMillis != null && savedEndDateMillis != null) {
         // Use saved dates
@@ -346,12 +348,12 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                             child: Text(type.label),
                           );
                         }).toList(),
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           if (value != null) {
                             setState(() {
                               _selectedPeriodType = value;
                             });
-                            _saveDatePreferences();
+                            await _saveDatePreferences();
                           }
                         },
                       ),
@@ -366,9 +368,9 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                       child: _buildDateSelector(
                         'Start Date',
                         _startDate,
-                        (date) {
+                        (date) async {
                           setState(() => _startDate = date);
-                          _saveDatePreferences();
+                          await _saveDatePreferences();
                         },
                       ),
                     ),
@@ -377,9 +379,9 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                       child: _buildDateSelector(
                         'End Date',
                         _endDate,
-                        (date) {
+                        (date) async {
                           setState(() => _endDate = date);
-                          _saveDatePreferences();
+                          await _saveDatePreferences();
                         },
                       ),
                     ),
@@ -390,37 +392,37 @@ class _AutomobileDetailScreenState extends State<AutomobileDetailScreen>
                 Wrap(
                   spacing: 8,
                   children: [
-                    _buildQuickRangeButton('Last Month', () {
+                    _buildQuickRangeButton('Last Month', () async {
                       final now = DateTime.now();
                       setState(() {
                         _endDate = now;
                         _startDate = DateTime(now.year, now.month - 1, now.day);
                       });
-                      _saveDatePreferences();
+                      await _saveDatePreferences();
                     }),
-                    _buildQuickRangeButton('Last 3 Months', () {
+                    _buildQuickRangeButton('Last 3 Months', () async {
                       final now = DateTime.now();
                       setState(() {
                         _endDate = now;
                         _startDate = DateTime(now.year, now.month - 3, now.day);
                       });
-                      _saveDatePreferences();
+                      await _saveDatePreferences();
                     }),
-                    _buildQuickRangeButton('Last 6 Months', () {
+                    _buildQuickRangeButton('Last 6 Months', () async {
                       final now = DateTime.now();
                       setState(() {
                         _endDate = now;
                         _startDate = DateTime(now.year, now.month - 6, now.day);
                       });
-                      _saveDatePreferences();
+                      await _saveDatePreferences();
                     }),
-                    _buildQuickRangeButton('Last Year', () {
+                    _buildQuickRangeButton('Last Year', () async {
                       final now = DateTime.now();
                       setState(() {
                         _endDate = now;
                         _startDate = DateTime(now.year - 1, now.month, now.day);
                       });
-                      _saveDatePreferences();
+                      await _saveDatePreferences();
                     }),
                   ],
                 ),
